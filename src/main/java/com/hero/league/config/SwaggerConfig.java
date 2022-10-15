@@ -1,5 +1,6 @@
 package com.hero.league.config;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -26,7 +27,8 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .select()
                 //扫描的包路径
-                .apis(RequestHandlerSelectors.basePackage("com.hero.league.discuss.*"))
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+//                .apis(RequestHandlerSelectors.basePackage("com.hero.league.*"))
                 .build();
     }
 
