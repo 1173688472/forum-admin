@@ -2,7 +2,9 @@ package com.hero.league.serivce.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hero.league.constant.CodeEnums;
 import com.hero.league.entity.Users;
+import com.hero.league.exception.BusinessException;
 import com.hero.league.mapper.UsersMapper;
 import com.hero.league.serivce.UsersService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.hero.league.constant.UserConstant.USER_LOGIN_STATE;
+import static net.sf.jsqlparser.util.validation.metadata.NamedObject.user;
 
 
 /**
@@ -39,13 +42,13 @@ public class UsersServiceImpl  extends ServiceImpl<UsersMapper, Users> implement
     public Users userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
-            return null;
+            throw  new BusinessException(CodeEnums.NULL_ERROR);
         }
-        if (userAccount.length() < 4) {
-            return null;
+        if (userAccount.length() < 4 && userAccount.length() > 16) {
+            throw  new BusinessException(CodeEnums.PARAMS_ERROR);
         }
-        if (userPassword.length() < 8) {
-            return null;
+        if (userPassword.length() < 4) {
+            throw  new BusinessException(CodeEnums.PARAMS_ERROR);
         }
         // 账户不能包含特殊字符
         String validPattern = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
@@ -54,44 +57,20 @@ public class UsersServiceImpl  extends ServiceImpl<UsersMapper, Users> implement
             return null;
         }
         // 2. 加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+//        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
         // 查询用户是否存在
-        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userAccount", userAccount);
-        queryWrapper.eq("userPassword", encryptPassword);
-        Users user = usersMapper.selectOne(queryWrapper);
+        Users users = usersMapper.selectByNamePass(userAccount, userPassword);
         // 用户不存在
-        if (user == null) {
+        if (users == null) {
             log.info("user login failed, userAccount cannot match userPassword");
             return null;
         }
         // 3. 用户脱敏  todo:没有写好
 //        Users safetyUser = getSafetyUser(user);
         // 4. 记录用户的登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE,user);
-        return user;
+//        request.getSession().setAttribute(USER_LOGIN_STATE,user);
+        return users;
     }
 
 
-
-    @Override
-    public Users getSafetyUser(Users originUser) {
-//        if (originUser == null) {
-//            return null;
-//        }
-//        Users safetyUser = new Users();
-//        safetyUser.setId(originUser.getId());
-//        safetyUser.setUsername(originUser.getUsername());
-//        safetyUser.setUserAccount(originUser.getUserAccount());
-//        safetyUser.setAvatarUrl(originUser.getAvatarUrl());
-//        safetyUser.setGender(originUser.getGender());
-//        safetyUser.setPhone(originUser.getPhone());
-//        safetyUser.setEmail(originUser.getEmail());
-//        safetyUser.setPlanetCode(originUser.getPlanetCode());
-//        safetyUser.setUserRole(originUser.getUserRole());
-//        safetyUser.setUserStatus(originUser.getUserStatus());
-//        safetyUser.setCreateTime(originUser.getCreateTime());
-//        return safetyUser;
-        return null;
-    }
 }

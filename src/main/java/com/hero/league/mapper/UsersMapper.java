@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hero.league.entity.Users;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * @author: shayu
  * @date: 2022/10/15
@@ -13,4 +15,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UsersMapper extends BaseMapper<Users> {
 
+    List<Users> list();
+    Users selectByNamePass(String userAccount,String userPassword);
 }

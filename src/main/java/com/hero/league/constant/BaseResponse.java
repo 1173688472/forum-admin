@@ -1,5 +1,7 @@
 package com.hero.league.constant;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * @ClassName: BaseResponse
  * @Description:    通用返回类
  */
-
+@Data
 public class BaseResponse<T> implements Serializable {
 
     private int code;

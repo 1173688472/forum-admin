@@ -27,8 +27,8 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .select()
                 //扫描的包路径
-                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-//                .apis(RequestHandlerSelectors.basePackage("com.hero.league.*"))
+//                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                .apis(RequestHandlerSelectors.basePackage("com.hero.league.controller"))
                 .build();
     }
 

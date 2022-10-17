@@ -22,13 +22,5 @@ public interface UsersService extends IService<Users> {
      */
     Users userLogin(String userAccount, String userPassword, HttpServletRequest request);
 
-    /**
-     * 用户脱敏
-     *
-     * @param originUser
-     * @return
-     */
-    Users getSafetyUser(Users originUser);
-
 
 }

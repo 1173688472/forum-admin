@@ -4,7 +4,7 @@ package com.hero.league.constant;
  * @author: shayu
  * @date: 2022/10/14/ 11:18
  * @ClassName: BaseResponse
- * @Description:    返回工具类
+ * @Description:    请求返回工具类
  */
 
 public class ResultUtils {
@@ -16,7 +16,7 @@ public class ResultUtils {
      * @return
      */
     public static <T> BaseResponse<T> success(T data) {
-        return new BaseResponse<>(0, data, "ok");
+        return new BaseResponse<>(200, data, "ok");
     }
 
     /**
