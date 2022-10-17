@@ -2,6 +2,7 @@ package com.hero.league.controller;
 
 
 import com.hero.league.bo.UserLoginRequestBo;
+import com.hero.league.bo.UserRegisterRequestBo;
 import com.hero.league.constant.BaseResponse;
 import com.hero.league.constant.CodeEnums;
 import com.hero.league.constant.ResultUtils;
@@ -56,6 +57,30 @@ public class UserController {
         Users user = usersService.userLogin(userAccount, userPassword, request);
         return ResultUtils.success(user);
     }
+
+
+    /**
+     *  用户注册
+     * @param userRegisterRequest
+     * @return
+     */
+    @PostMapping("/register")
+    public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequestBo userRegisterRequest) {
+        if (userRegisterRequest == null) {
+            throw new BusinessException(CodeEnums.NULL_ERROR);
+        }
+        String userName = userRegisterRequest.getUserName();
+        String userAccount = userRegisterRequest.getUserAccount();
+        String userPassword = userRegisterRequest.getUserPassword();
+        String checkPassword = userRegisterRequest.getCheckPassword();
+        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, userName)) {
+            return ResultUtils.error(CodeEnums.NULL_ERROR);
+        }
+        long result = usersService.userRegister(userAccount, userPassword, checkPassword, userName);
+        return ResultUtils.success(result);
+    }
+
+
 
     @Autowired
     UsersMapper usersMapper;

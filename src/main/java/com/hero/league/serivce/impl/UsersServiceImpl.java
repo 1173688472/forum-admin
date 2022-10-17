@@ -56,20 +56,74 @@ public class UsersServiceImpl  extends ServiceImpl<UsersMapper, Users> implement
         if (matcher.find()) {
             return null;
         }
-        // 2. 加密
+        // 2. 解密
 //        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
         // 查询用户是否存在
         Users users = usersMapper.selectByNamePass(userAccount, userPassword);
         // 用户不存在
         if (users == null) {
             log.info("user login failed, userAccount cannot match userPassword");
-            return null;
+            throw  new BusinessException(CodeEnums.NOT_USERS);
         }
         // 3. 用户脱敏  todo:没有写好
 //        Users safetyUser = getSafetyUser(user);
         // 4. 记录用户的登录态
 //        request.getSession().setAttribute(USER_LOGIN_STATE,user);
         return users;
+    }
+
+    @Override
+    public long userRegister(String userAccount, String userPassword, String checkPassword, String userName) {
+        // 1. 校验
+        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, userName)) {
+            throw new BusinessException(CodeEnums.NULL_ERROR, "参数为空");
+        }
+        if (userAccount.length() < 4 && userAccount.length() > 16 ) {
+            throw new BusinessException(CodeEnums.PARAMS_ERROR, "用户账号长度大于4小于16");
+        }
+        if (userPassword.length() < 6 && checkPassword.length() > 16) {
+            throw new BusinessException(CodeEnums.PARAMS_ERROR, "用户账号长度大于6小于16");
+        }
+        if (userName.length() < 1 && userName.length() > 16) {
+            throw new BusinessException(CodeEnums.PARAMS_ERROR, "用户名长度不为空小于16");
+        }
+        // 账户不能包含特殊字符
+        String validPattern = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+        Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
+        if (matcher.find()) {
+            throw new BusinessException(CodeEnums.PARAMS_ERROR);
+        }
+        // 密码和校验密码相同
+        if (!userPassword.equals(checkPassword)) {
+            throw new BusinessException(CodeEnums.PARAMS_ERROR);
+        }
+        // 账户不能重复
+        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount", userAccount);
+        long count = usersMapper.selectCount(queryWrapper);
+        if (count > 0) {
+            throw new BusinessException(CodeEnums.PARAMS_ERROR, "账号重复");
+        }
+        // 用户名不能重复
+        queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userName", userName);
+        count = usersMapper.selectCount(queryWrapper);
+        if (count > 0) {
+            throw new BusinessException(CodeEnums.PARAMS_ERROR, "用户名重复");
+        }
+        // 2. 加密
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+        // 3. 插入数据
+        Users user = new Users();
+        user.setUserAccount(userAccount);
+        user.setUserPassword(encryptPassword);
+        user.setUserName(userName);
+        boolean saveResult = this.save(user);
+        if (!saveResult) {
+            return -1;
+        }
+        return user.getID();
+
     }
 
 
