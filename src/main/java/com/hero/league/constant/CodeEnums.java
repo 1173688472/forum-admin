@@ -17,6 +17,8 @@ public enum CodeEnums {
 
     NULL_ERROR(40001, "请求数据为空", ""),
 
+    NOT_USERS(40002, "用户不存在", ""),
+
     NOT_LOGIN(40100, "未登录", ""),
 
     NO_AUTH(40101, "无权限", ""),
