@@ -17,4 +17,6 @@ public interface UsersMapper extends BaseMapper<Users> {
 
     List<Users> list();
     Users selectByNamePass(String userAccount,String userPassword);
+
+    Users getUserByUsername(String username);
 }

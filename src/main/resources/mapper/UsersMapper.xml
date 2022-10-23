@@ -27,5 +27,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from users where userAccount = #{userAccount} and userPassword = #{userPassword} and isDelete = 1;
     </select>
 
-
+    <select id="getUserByUsername" resultType="com.hero.league.entity.Users">
+        select
+            *
+        from
+            users
+        where userAccount = #{username} and isDelete = 1;
+    </select>
 </mapper>

@@ -31,4 +31,6 @@ public interface UsersService extends IService<Users> {
      * @return
      */
     long userRegister(String userAccount, String userPassword, String checkPassword, String userName);
+
+
 }

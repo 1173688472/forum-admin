@@ -88,4 +88,9 @@ public class UserController {
     public List<Users> userList() {
         return usersMapper.list();
     }
+
+    @GetMapping("/getData")
+    public String getData() {
+        return "date";
+    }
 }
