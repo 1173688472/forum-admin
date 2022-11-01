@@ -1,7 +1,6 @@
 package com.hero.league.serivce.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hero.league.constant.CodeEnums;
 import com.hero.league.entity.Users;
@@ -12,16 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
-import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.hero.league.constant.UserConstant.USER_LOGIN_STATE;
-import static net.sf.jsqlparser.util.validation.metadata.NamedObject.user;
 
 
 /**
