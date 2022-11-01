@@ -1,5 +1,6 @@
 package com.hero.league.serivce.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hero.league.constant.CodeEnums;
@@ -12,8 +13,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,33 +101,28 @@ public class UsersServiceImpl  extends ServiceImpl<UsersMapper, Users> implement
             throw new BusinessException(CodeEnums.PARAMS_ERROR);
         }
         // 账户不能重复
-        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userAccount", userAccount);
+        LambdaQueryWrapper<Users> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Users::getUserAccount, userAccount);
+
         long count = usersMapper.selectCount(queryWrapper);
         if (count > 0) {
             throw new BusinessException(CodeEnums.PARAMS_ERROR, "账号重复");
         }
-        // 用户名不能重复
-        queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userName", userName);
-        count = usersMapper.selectCount(queryWrapper);
-        if (count > 0) {
-            throw new BusinessException(CodeEnums.PARAMS_ERROR, "用户名重复");
-        }
+
         // 2. 加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+//        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
         // 3. 插入数据
         Users user = new Users();
         user.setUserAccount(userAccount);
-        user.setUserPassword(encryptPassword);
+        user.setUserPassword(userPassword);
         user.setUserName(userName);
+        user.setUserStatus(1);
+        user.setIsDelete(0);
+        user.setCreateTime(new Date());
         boolean saveResult = this.save(user);
         if (!saveResult) {
             return -1;
         }
-        return user.getID();
-
+        return user.getId();
     }
-
-
 }

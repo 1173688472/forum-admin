@@ -4,27 +4,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hero.league.mapper.UsersMapper">
 
-    <resultMap type="com.hero.league.entity.Users" id="UsersResult">
-        <result property="ID" column="ID"/>
-        <result property="userName" column="userName"/>
-        <result property="userAccount" column="userAccount"/>
-        <result property="avatarUrl" column="avatarUrl"/>
-        <result property="gender" column="gender"/>
-        <result property="userPassword" column="userPassword"/>
-        <result property="phone" column="phone"/>
-        <result property="email" column="email"/>
-        <result property="userStatus" column="userStatus"/>
-        <result property="createTime" column="createTime"/>
-        <result property="updateTime" column="updateTime"/>
-        <result property="isDelete" column="isDelete"/>
-        <result property="userRole" column="isDelete"/>
-    </resultMap>
     <select id="list" resultType="com.hero.league.entity.Users">
         select * from users
     </select>
     <select id="selectByNamePass" resultType="com.hero.league.entity.Users">
-        select Id,userName,userAccount,avatarUrl,gender,userPassword,phone,email,userStatus,createTime,updateTime,isDelete,isDelete
-        from users where userAccount = #{userAccount} and userPassword = #{userPassword} and isDelete = 1;
+        select
+            *
+        from
+            users
+        where user_account = #{userAccount} and user_password = #{userPassword} and is_delete = 0;
     </select>
 
     <select id="getUserByUsername" resultType="com.hero.league.entity.Users">
@@ -32,6 +20,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             *
         from
             users
-        where userAccount = #{username} and isDelete = 1;
+        where user_account = #{username} and is_delete = 0;
     </select>
 </mapper>

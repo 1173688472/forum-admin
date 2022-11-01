@@ -25,42 +25,49 @@ private static final long serialVersionUID=1L;
 
     /** 主键ID */
     @TableId(value = "id")
-    private Long ID;
+    private Long id;
 
     /** 用户名 */
+    @TableField(value="user_name")
     private String userName;
 
     /** 账户 */
+    @TableField(value="user_account")
     private String userAccount;
 
     /** 头像 */
+    @TableField(value="avatar_url")
     private String avatarUrl;
 
     /** 性别 */
-    private String gender;
+    @TableField(value="gender")
+    private Integer gender;
 
     /** 密码 */
+    @TableField(value="user_password")
     private String userPassword;
 
     /** 手机号 */
+    @TableField(value="phone")
     private String phone;
 
     /** 邮箱 */
+    @TableField(value="email")
     private String email;
 
     /** 状态 1  - 正常  0 - 被封 */
-    private String userStatus;
+    @TableField(value="user_status")
+    private Integer userStatus;
 
     /** 创建时间 */
+    @TableField(value="create_time")
     private Date createTime;
 
     /** 更改时间 */
+    @TableField(value="update_time")
     private Date updateTime;
 
     /** 是否删除(逻辑删除)1-存在 0-删除 */
-    private Long isDelete;
-
-    /** 用户角色 0 - 普通用户 1 - 管理员 */
-    private String userRole;
-
+    @TableField(value="is_delete")
+    private Integer isDelete;
 }
